@@ -920,8 +920,8 @@ export const calendarEvents = [
   {
     title: "Math",
     allDay: false,
-    start: new Date(2024, 11, 21, 8, 0),
-    end: new Date(2024, 11, 26, 8, 45),
+    start: new Date(2024, 10, 25, 8, 0), // November 25
+    end: new Date(2024, 10, 28, 8, 45), // November 28
   },
   {
     title: "English",
