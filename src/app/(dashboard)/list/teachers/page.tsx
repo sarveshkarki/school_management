@@ -2,8 +2,9 @@ import FormModal from "@/components/FormModal";
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { role, teachersData } from "@/lib/data";
+import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
+import { ITEMS_PER_PAGE } from "@/lib/settings";
 import { Class, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -89,8 +90,13 @@ const renderRow = (item: TeacherList) => (
   </tr>
 );
 
-const Page = async () => {
+const Page = async ({ searchParams }: { searchParams: { page?: string } }) => {
+  const currentPage = parseInt(searchParams.page || "1", 10) || 1;
+  const totalCount = await prisma.teacher.count();
+
   const data = await prisma.teacher.findMany({
+    skip: (currentPage - 1) * ITEMS_PER_PAGE,
+    take: ITEMS_PER_PAGE,
     include: {
       subjects: true,
       classes: true,
@@ -118,7 +124,7 @@ const Page = async () => {
       {/* LIST */}
       <Table columns={columns} renderRow={renderRow} data={data} />
       {/* PAGINATION */}
-      <Pagination />
+      <Pagination page={currentPage} count={totalCount} />
     </div>
   );
 };
